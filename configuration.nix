@@ -119,7 +119,11 @@
     foot # Fallback terminale emulator (not hardware accelerated)
     zsh # Shell
     oh-my-posh # Stylizer for zsh
+    zip
     unzip
+    xz
+    fzf
+
 
     # Programming related packages :
     python313Packages.python
@@ -128,6 +132,7 @@
     nodejs
     cargo # Rust package manager
     gcc # Toolchain for C
+    livegrep #text searching
 
     # WM environment :
     python313Packages.pywal16
