@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, lib, ... }:
 
 {
   imports =
@@ -17,7 +17,12 @@
 
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
-
+  boot.kernelParams = [
+    "quiet"
+    "loglevel=0"
+    "systemd.show_status=false"
+    "console=ttyS0,115200"
+  ];
   # GPUs config :
   hardware.nvidia = {
     prime = {
@@ -204,6 +209,7 @@
         command = "/run/current-system/sw/bin/tuigreet --time --cmd start-hyprland -r";
         user = "greeter";
       };
+      terminal.vt = lib.mkForce 3;
     };
   };
 
