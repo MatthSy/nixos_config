@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   imports =
@@ -137,11 +137,7 @@
     wlogout # Logout screen
     gdk-pixbuf # Used by wlogout
     bibata-cursors # Mouse cursor
-    (pkgs.catppuccin-sddm.override {
-      # Theme for sddm
-      flavor = "mocha";
-      accent = "mauve";
-    })
+    tuigreet # Greeter, display manager
 
   ];
 
@@ -149,6 +145,16 @@
   environment.variables = {
     EDITOR = "nvim";
     VISUAL = "nvim";
+    NH_FLAKE = "/home/matt/.config/nixos";
+    NH_OS_FLAKE = "/home/matt/.config/nixos";
+  };
+
+  # nh : nixos helper
+  programs.nh = {
+    enable = true;
+    # clean.enable = true;
+    # clean.extraArgs = "--keep-since 4d --keep 3";
+    flake = "/home/matt/.config/nixos";
   };
 
   # WM environment :
@@ -190,21 +196,14 @@
 
   security.pam.services.login.fprintAuth = false;
 
-  services.xserver.enable = true;
-  services.displayManager = {
-    sddm = {
-      enable = true;
-      theme = "catppuccin-mocha-mauve";
-
-      wayland = {
-        enable = false;
-        # default compositor is "weston", you can optionally change it to kwin
-        #compositor = "kwin";
+  services.greetd = {
+    enable = true;
+    useTextGreeter = true;
+    settings = {
+      default_session = {
+        command = "/run/current-system/sw/bin/tuigreet --time --cmd start-hyprland -r";
+        user = "greeter";
       };
-    };
-    autoLogin = {
-      enable = false;
-      user = "matt"; # Replace with the desired user
     };
   };
 
