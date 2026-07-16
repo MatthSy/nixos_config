@@ -103,19 +103,13 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     neovim # Main text editor
-    wget
-    git
 
-    firefox # Main browser
-    thunderbird # Mail client
-    nemo # Main file manager
     fastfetch # System infos
     wl-clipboard # clipboard additions (used for neovim)
     btop-cuda
     htop
 
     # Terminal and shell related
-    alacritty # Main terminal emulator
     foot # Fallback terminale emulator (not hardware accelerated)
     zsh # Shell
     oh-my-posh # Stylizer for zsh
@@ -126,14 +120,7 @@
 
 
     # Programming related packages :
-    python313Packages.python
-    luarocks # used by treesitter in neovim config
-    lua5_1 # Same
-    lua-language-server
-    nodejs
-    cargo # Rust package manager
     gcc # Toolchain for C
-    livegrep #text searching
 
     # WM environment :
     python313Packages.pywal16
