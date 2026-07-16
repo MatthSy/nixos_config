@@ -162,8 +162,8 @@
   # nh : nixos helper
   programs.nh = {
     enable = true;
-    # clean.enable = true;
-    # clean.extraArgs = "--keep-since 4d --keep 3";
+    clean.enable = true;
+    clean.extraArgs = "--all --keep 10";
     flake = "/home/matt/.config/nixos";
   };
 
