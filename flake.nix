@@ -19,7 +19,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
 
-          home-manager.users.matt = import ./home.nix;
+          home-manager.users.matt = import ./home/matt/default.nix;
         }
       ];
     };

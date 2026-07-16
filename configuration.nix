@@ -129,6 +129,7 @@
     python313Packages.python
     luarocks # used by treesitter in neovim config
     lua5_1 # Same
+    lua_language_server
     nodejs
     cargo # Rust package manager
     gcc # Toolchain for C
@@ -162,8 +163,8 @@
   # nh : nixos helper
   programs.nh = {
     enable = true;
-    # clean.enable = true;
-    # clean.extraArgs = "--keep-since 4d --keep 3";
+    clean.enable = true;
+    clean.extraArgs = "--all --keep 5";
     flake = "/home/matt/.config/nixos";
   };
 
