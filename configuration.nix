@@ -129,7 +129,7 @@
     python313Packages.python
     luarocks # used by treesitter in neovim config
     lua5_1 # Same
-    lua_language_server
+    lua-language-server
     nodejs
     cargo # Rust package manager
     gcc # Toolchain for C
