@@ -22,28 +22,18 @@
     "systemd.show_status=false"
     "console=ttyS0,115200"
   ];
-  # GPUs config :
-  hardware.nvidia = {
-    prime = {
-      offload.enable = true;
-      offload.enableOffloadCmd = true;
-      amdgpuBusId = "PCI:7@0:0:0";
-      nvidiaBusId = "PCI:1@0:0:0";
-    };
-    open = false;
-    modesetting.enable = true;
-  };
 
-  hardware.graphics.enable = true;
-  services.xserver.videoDrivers = ["amdgpu" "nvidia"];
+  # Might move to host specific config later
+  hardware.graphics.enable = lib.mkDefault true;
 
+  # Might move to host specific config later
   nix.settings = {
     extra-substituters = ["https://noctalia.cachix.org"];
     extra-trusted-public-keys = ["noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="];
     experimental-features = ["nix-command" "flakes"];
   };
 
-  networking.hostName = "nixos_matt"; # Define your hostname.
+  networking.hostName = lib.mkDefault "matt"; # Define your hostname.
   #  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -85,13 +75,13 @@
     isNormalUser = true;
     description = "Matt";
     extraGroups = ["networkmanager" "wheel"];
-    packages = with pkgs; [
-    ];
+    # packages = with pkgs; [
+    # ];
   };
   nix.settings.allowed-users = ["matt" "@wheel"];
 
   # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfree = lib.mkDefault true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -109,7 +99,7 @@
   # System related :
   environment.variables = {
     EDITOR = "nvim";
-    VISUAL = "nvim";
+    VISUAL = "kitty nvim";
     NH_FLAKE = "/home/matt/.config/nixos";
     NH_OS_FLAKE = "/home/matt/.config/nixos";
     NH_HOME_FLAKE = "/home/matt/.config/home-manager";
@@ -118,31 +108,13 @@
   # nh : nixos helper
   programs.nh = {
     enable = true;
-    clean.enable = true;
-    clean.extraArgs = "--all --keep 10";
+    # clean.enable = true;
+    clean.extraArgs = "all --keep 5";
     flake = "/home/matt/.config/nixos";
   };
 
-  # WM environment :
-  programs.hyprland.enable = true;
-
   # Shell related :
   programs.zsh.enable = true;
-
-  # Gaming related :
-  nixpkgs.overlays = [
-    (final: prev: {
-      steam = prev.steam.override {
-        extraArgs = "-cef-disable-gpu-compositing";
-      };
-    })
-  ];
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = false; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = false; # Open ports for Source Dedicated Server hosting
-    extraCompatPackages = with pkgs; [proton-ge-bin];
-  };
 
   fonts = {
     enableDefaultPackages = true;
@@ -171,17 +143,6 @@
   security.pam.services.login.fprintAuth = false;
 
   services.upower.enable = true;
-  services.greetd = {
-    enable = true;
-    useTextGreeter = true;
-    settings = {
-      default_session = {
-        command = "/run/current-system/sw/bin/tuigreet --time --cmd start-hyprland -r";
-        user = "greeter";
-      };
-      terminal.vt = lib.mkForce 3;
-    };
-  };
 
   services.auto-cpufreq = {
     enable = true;
@@ -198,17 +159,6 @@
       };
     };
   };
-
-  # WM environment
-
-  /*
-  services.dunst = {
-    # Notifications daemon
-    enable = true;
-    enableWayland = true;
-    enableX11 = false;
-  };
-  */
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
