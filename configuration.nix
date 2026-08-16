@@ -1,6 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
 {
   config,
   pkgs,
@@ -9,8 +6,6 @@
   ...
 }: {
   imports = [
-    # Include the results of the hardware scan.
-    ./hardware-configuration.nix
     ./extra_cache_providers.nix
   ];
 
@@ -24,17 +19,15 @@
     "quiet"
     "loglevel=0"
     "systemd.show_status=false"
-    "console=ttyS0,115200"
+    # "console=ttyS0,115200"
   ];
-  # GPUs config :
-  hardware.graphics.enable = true;
-  hardware.graphics.enable32Bit = true;
 
-  services.xserver.videoDrivers = ["amdgpu"];
+  # Might move to host specific config later
+  nix.settings = {
+    experimental-features = ["nix-command" "flakes"];
+  };
 
-  nix.settings.experimental-features = ["nix-command" "flakes"];
-
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = lib.mkDefault "matt_nix"; # Define your hostname.
   #  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -71,105 +64,39 @@
   # Configure console keymap
   console.keyMap = "fr";
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users."matt" = {
-    isNormalUser = true;
-    description = "Matt";
-    extraGroups = ["networkmanager" "wheel"];
-    packages = with pkgs; [
-      # Gaming related packages :
-      discord
-      protontricks
-      vulkan-tools
-      mangohud
-      nvtopPackages.full
-      gpustat
-    ];
-  };
-  nix.settings.allowed-users = ["matt" "@wheel"];
+  nix.settings.allowed-users = lib.mkDefault ["matt" "@wheel"];
 
   # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfree = lib.mkDefault true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     neovim # Main text editor
-    wget
     git
-
-    firefox # Main browser
-    thunderbird # Mail client
-    nemo # Main file manager
-    fastfetch # System infos
-    wl-clipboard # clipboard additions (used for neovim)
-    btop-cuda
-    htop
+    tuigreet # greeter
+    nano
 
     # Terminal and shell related
-    alacritty # Main terminal emulator
-    foot # Fallback terminale emulator (not hardware accelerated)
+    foot # Fallback terminal emulator (not hardware accelerated)
     zsh # Shell
-    oh-my-posh # Stylizer for zsh
-    zip
-    unzip
-    xz
-    fzf
-
-    # Programming related packages :
-    python313Packages.python
-    luarocks # used by treesitter in neovim config
-    lua5_1 # Same
-    nodejs
-    cargo # Rust package manager
-    gcc # Toolchain for C
-    livegrep #text searching
-
-    # WM environment :
-    python313Packages.pywal16
-    wofi # App launcher
-    hyprlock # Lockscreen
-    hypridle # Idle detector, auto suspend
-    hyprpaper # Wallpaper manager
-    nsxiv # Image viewer, used for wallpaper selection
-    waybar # Bar
-    hyprshot # Screenshot tool
-    brightnessctl # Screen brightness tool
-    wlogout # Logout screen
-    gdk-pixbuf # Used by wlogout
-    bibata-cursors # Mouse cursor
-    tuigreet # Greeter, display manager
   ];
 
   # System related :
   environment.variables = {
     EDITOR = "nvim";
-    VISUAL = "nvim";
-    NH_FLAKE = "/home/matt/.config/nixos";
-    NH_OS_FLAKE = "/home/matt/.config/nixos";
-    NH_HOME_FLAKE = "/home/matt/.config/home-manager";
+    VISUAL = "kitty nvim";
+    NH_FLAKE = lib.mkDefault "/home/matt/.config/nixos";
+    NH_OS_FLAKE = lib.mkDefault "/home/matt/.config/nixos";
+    NH_HOME_FLAKE = lib.mkDefault "/home/matt/.config/home-manager";
   };
 
   # nh : nixos helper
   programs.nh = {
     enable = true;
-    clean.enable = true;
-    clean.extraArgs = "--all --keep 10";
-    flake = "/home/matt/.config/nixos";
-  };
-
-  # WM environment :
-  programs.hyprland.enable = true;
-
-  # Shell related :
-  programs.zsh.enable = true;
-
-  # Gaming related :
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports for Source Dedicated Server hosting
-    extraCompatPackages = with pkgs; [proton-ge-bin];
+    # clean.enable = true;
+    clean.extraArgs = lib.mkDefault "all --keep 5";
+    flake = lib.mkDefault "/home/matt/.config/nixos";
   };
 
   fonts = {
@@ -195,23 +122,12 @@
 
   # System related :
 
+  # Disable finger print auth, prevent from black screen on session opening
   security.pam.services.login.fprintAuth = false;
 
-  services.greetd = {
-    enable = true;
-    useTextGreeter = true;
-    settings = {
-      default_session = {
-        command = "/run/current-system/sw/bin/tuigreet --time --cmd start-hyprland -r";
-        user = "greeter";
-      };
-      terminal.vt = lib.mkForce 3;
-    };
-  };
-
   services.auto-cpufreq = {
-    enable = true;
-    settings = {
+    enable = lib.mkDefault true;
+    settings = lib.mkDefault {
       charger = {
         governor = "performance";
         energy_performance_preference = "performance";
@@ -225,21 +141,13 @@
     };
   };
 
-  # WM environment
-
-  services.dunst = {
-    # Notifications daemon
-    enable = true;
-    enableWayland = true;
-    enableX11 = false;
-  };
-
-  # Enable SVG (patch for icons in wlogout)
-  programs.gdk-pixbuf.modulePackages = [pkgs.librsvg];
-
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [
+    53317 # Port for the localsend app
+  ];
+  networking.firewall.allowedUDPPorts = [
+    53317 # Port for the localsend app
+  ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

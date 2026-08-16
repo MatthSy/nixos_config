@@ -2,16 +2,29 @@
   description = "Root nixos config flake";
 
   inputs = {
-    nixpkgs.url = "nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-
-      specialArgs = { inherit inputs; };
-      modules = [
-        ./configuration.nix
-      ];
+  outputs = {
+    self,
+    nixpkgs,
+    ...
+  } @ inputs: let
+    mkHost = hostname: extraModules:
+      nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {inherit inputs;};
+        modules =
+          [
+            ./configuration.nix
+            ./hosts/${hostname}
+          ]
+          ++ extraModules;
+      };
+  in {
+    nixosConfigurations = {
+      fixe = mkHost "fixe" [];
+      omen = mkHost "omen" [];
     };
   };
 }
