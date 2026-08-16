@@ -28,4 +28,6 @@
     dedicatedServer.openFirewall = false; # Open ports for Source Dedicated Server hosting
     extraCompatPackages = with pkgs; [proton-ge-bin];
   };
+
+  services.lact.enable = true; # For GPU settings
 }
