@@ -1,15 +1,18 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, pkgs, inputs, lib, ... }:
-
 {
-  imports =
-    [
-      # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  config,
+  pkgs,
+  inputs,
+  lib,
+  ...
+}: {
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    ./extra_cache_providers.nix
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -24,24 +27,14 @@
     "console=ttyS0,115200"
   ];
   # GPUs config :
-  hardware.nvidia = {
-    prime = {
-      offload.enable = true;
-      offload.enableOffloadCmd = true;
-      amdgpuBusId = "PCI:7@0:0:0";
-      nvidiaBusId = "PCI:1@0:0:0";
-    };
-    open = false;
-    modesetting.enable = true;
-  };
-
   hardware.graphics.enable = true;
-  services.xserver.videoDrivers = [ "amdgpu" "nvidia" ];
+  hardware.graphics.enable32Bit = true;
 
+  services.xserver.videoDrivers = ["amdgpu"];
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = ["nix-command" "flakes"];
 
-  networking.hostName = "nixos_matt"; # Define your hostname.
+  networking.hostName = "nixos"; # Define your hostname.
   #  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -82,7 +75,7 @@
   users.users."matt" = {
     isNormalUser = true;
     description = "Matt";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = ["networkmanager" "wheel"];
     packages = with pkgs; [
       # Gaming related packages :
       discord
@@ -93,8 +86,7 @@
       gpustat
     ];
   };
-  nix.settings.allowed-users = [ "matt" "@wheel" ];
-
+  nix.settings.allowed-users = ["matt" "@wheel"];
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -124,7 +116,6 @@
     xz
     fzf
 
-
     # Programming related packages :
     python313Packages.python
     luarocks # used by treesitter in neovim config
@@ -142,13 +133,12 @@
     hyprpaper # Wallpaper manager
     nsxiv # Image viewer, used for wallpaper selection
     waybar # Bar
-    hyprshot # Screenshot tool 
+    hyprshot # Screenshot tool
     brightnessctl # Screen brightness tool
     wlogout # Logout screen
     gdk-pixbuf # Used by wlogout
     bibata-cursors # Mouse cursor
     tuigreet # Greeter, display manager
-
   ];
 
   # System related :
@@ -157,6 +147,7 @@
     VISUAL = "nvim";
     NH_FLAKE = "/home/matt/.config/nixos";
     NH_OS_FLAKE = "/home/matt/.config/nixos";
+    NH_HOME_FLAKE = "/home/matt/.config/home-manager";
   };
 
   # nh : nixos helper
@@ -178,7 +169,7 @@
     enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports for Source Dedicated Server hosting
-    extraCompatPackages = with pkgs; [ proton-ge-bin ];
+    extraCompatPackages = with pkgs; [proton-ge-bin];
   };
 
   fonts = {
@@ -202,7 +193,7 @@
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
-  # System related : 
+  # System related :
 
   security.pam.services.login.fprintAuth = false;
 
@@ -234,7 +225,6 @@
     };
   };
 
-
   # WM environment
 
   services.dunst = {
@@ -245,7 +235,7 @@
   };
 
   # Enable SVG (patch for icons in wlogout)
-  programs.gdk-pixbuf.modulePackages = [ pkgs.librsvg ];
+  programs.gdk-pixbuf.modulePackages = [pkgs.librsvg];
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -260,5 +250,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "26.05"; # Did you read the comment?
-
 }
