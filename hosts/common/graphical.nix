@@ -1,5 +1,6 @@
-{...}: {
-  # WM environment :
+{lib, ...}: {
+  hardware.graphics.enable = lib.mkDefault true;
+
   programs.hyprland.enable = true;
 
   services.greetd = {
@@ -13,4 +14,6 @@
       # terminal.vt = lib.mkForce 3;
     };
   };
+
+  services.upower.enable = true;
 }

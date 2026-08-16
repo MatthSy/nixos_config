@@ -20,11 +20,8 @@
     "quiet"
     "loglevel=0"
     "systemd.show_status=false"
-    "console=ttyS0,115200"
+    # "console=ttyS0,115200"
   ];
-
-  # Might move to host specific config later
-  hardware.graphics.enable = lib.mkDefault true;
 
   # Might move to host specific config later
   nix.settings = {
@@ -33,7 +30,7 @@
     experimental-features = ["nix-command" "flakes"];
   };
 
-  networking.hostName = lib.mkDefault "matt"; # Define your hostname.
+  networking.hostName = lib.mkDefault "matt_nix"; # Define your hostname.
   #  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -70,15 +67,7 @@
   # Configure console keymap
   console.keyMap = "fr";
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users."matt" = {
-    isNormalUser = true;
-    description = "Matt";
-    extraGroups = ["networkmanager" "wheel"];
-    # packages = with pkgs; [
-    # ];
-  };
-  nix.settings.allowed-users = ["matt" "@wheel"];
+  nix.settings.allowed-users = lib.mkDefault ["matt" "@wheel"];
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = lib.mkDefault true;
@@ -100,21 +89,18 @@
   environment.variables = {
     EDITOR = "nvim";
     VISUAL = "kitty nvim";
-    NH_FLAKE = "/home/matt/.config/nixos";
-    NH_OS_FLAKE = "/home/matt/.config/nixos";
-    NH_HOME_FLAKE = "/home/matt/.config/home-manager";
+    NH_FLAKE = lib.mkDefault "/home/matt/.config/nixos";
+    NH_OS_FLAKE = lib.mkDefault "/home/matt/.config/nixos";
+    NH_HOME_FLAKE = lib.mkDefault "/home/matt/.config/home-manager";
   };
 
   # nh : nixos helper
   programs.nh = {
     enable = true;
     # clean.enable = true;
-    clean.extraArgs = "all --keep 5";
-    flake = "/home/matt/.config/nixos";
+    clean.extraArgs = lib.mkDefault "all --keep 5";
+    flake = lib.mkDefault "/home/matt/.config/nixos";
   };
-
-  # Shell related :
-  programs.zsh.enable = true;
 
   fonts = {
     enableDefaultPackages = true;
@@ -142,11 +128,9 @@
   # Disable finger print auth, prevent from black screen on session opening
   security.pam.services.login.fprintAuth = false;
 
-  services.upower.enable = true;
-
   services.auto-cpufreq = {
-    enable = true;
-    settings = {
+    enable = lib.mkDefault true;
+    settings = lib.mkDefault {
       charger = {
         governor = "performance";
         energy_performance_preference = "performance";
@@ -161,8 +145,12 @@
   };
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [
+    53317 # Port for the localsend app
+  ];
+  networking.firewall.allowedUDPPorts = [
+    53317 # Port for the localsend app
+  ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

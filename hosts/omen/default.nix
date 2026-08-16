@@ -2,7 +2,19 @@
   imports = [
     ../common/graphical.nix
     ../common/gaming.nix
+
+    # Specialisations :
+    ../../specialisations/dev
   ];
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users."matt" = {
+    isNormalUser = true;
+    description = "Matt";
+    extraGroups = ["networkmanager" "wheel"];
+    # packages = with pkgs; [
+    # ];
+  };
 
   # GPUs config :
   hardware.nvidia = {
