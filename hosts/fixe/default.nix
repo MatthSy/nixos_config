@@ -30,4 +30,5 @@
   };
 
   services.lact.enable = true; # For GPU settings
+  hardware.amdgpu.overdrive.enable = true; # Enable GPU overclocking
 }
