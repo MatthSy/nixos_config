@@ -9,7 +9,7 @@
       lazydocker
     ];
 
-    virtualisation.docker = {
+    virtualisation.podman = {
       enable = true;
       enableOnBoot = true;
       storageDriver = "overlay2";
@@ -24,6 +24,6 @@
       };
     };
 
-    virtualisation.oci-containers.backend = "docker";
+    # virtualisation.oci-containers.backend = "docker";
   };
 }

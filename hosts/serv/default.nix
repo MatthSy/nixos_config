@@ -3,14 +3,22 @@
   lib,
   ...
 }: {
+  assertions = [
+    {
+      assertion = true;
+      message = "UPDATE HARDWARE CONFIG BEFORE SWITCH";
+    }
+  ];
   imports = [
-    ../../hardware-configuration.nix
+    #WARN: Must change this file
+    ./hardware-configuration.nix
 
-    services/docker.nix
+    # services/docker.nix
     services/dashy
+    services/jellyfin.nix
     # Services to add :
     # wireguard ?
-    # Sonarr & radarr
+    # Sonarr & radarr + nzbget
     # Jellyseerr
     # Jellyfin
     # Nextcloud or Syncthing
@@ -22,7 +30,7 @@
   users.users."matt_serv" = {
     isNormalUser = true;
     description = "Main wheel user";
-    extraGroups = ["networkmanager" "wheel" "docker"];
+    extraGroups = ["networkmanager" "wheel" "media"];
     # packages = with pkgs; [
     # ];
   };
@@ -30,9 +38,6 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Might move to host specific config later
   nix.settings = {

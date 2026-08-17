@@ -25,6 +25,7 @@
     nixosConfigurations = {
       fixe = mkHost "fixe" [];
       omen = mkHost "omen" [];
+      serv = mkHost "serv" [];
     };
   };
 }
