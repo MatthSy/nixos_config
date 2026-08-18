@@ -4,7 +4,7 @@
       image = "ghcr.io/hotio/sonarr:release";
       ports = ["8989:8989"];
       cmd = [
-        ""
+        "--network=container:podman-gluetun"
       ];
       environment = {
         PUID = "1000";
