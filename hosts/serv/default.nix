@@ -15,7 +15,7 @@
 
     # services/docker.nix
     services/dashy
-    services/jellyfin.nix
+    services/media
     # Services to add :
     # wireguard ?
     # Sonarr & radarr + nzbget
