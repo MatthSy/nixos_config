@@ -14,8 +14,9 @@
     ./hardware-configuration.nix
 
     # services/docker.nix
-    services/dashy
-    services/media
+    # services/dashy
+    # services/media
+
     # Services to add :
     # wireguard ?
     # Sonarr & radarr + nzbget
@@ -53,4 +54,9 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+
+  services.openssh.enable = true;
+
+  # Disable suspend when lid closed
+  services.logind.lidSwitch = "ignore";
 }

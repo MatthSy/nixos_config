@@ -2,7 +2,7 @@
   virtualisation.oci-containers.containers = {
     gluetun = {
       image = "qmcgaw/gluetun:latest";
-      # ports = [""];
+      ports = ["8989:8989" "8080:8080"];
       cmd = [""];
       environment = {
         VPN_SERVICE_PROVIDER = "protonvpn";

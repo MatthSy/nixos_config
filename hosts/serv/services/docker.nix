@@ -14,8 +14,7 @@
     };
   };
 
-  # Might change to podman
-  virtualisation.oci-containers.backend = "docker";
+  virtualisation.oci-containers.backend = "podman";
 
   # Example for oci-containers :
   virtualisation.oci-containers.containers = {
