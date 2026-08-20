@@ -15,7 +15,7 @@
     # services/docker.nix
     services/podman.nix
     services/dashy
-    # services/media
+    services/media/gluetun.nix
 
     # Services to add :
     # wireguard ?

@@ -1,11 +1,11 @@
 {...}: {
   virtualisation.oci-containers.containers = {
-    gluetun = {
+    sonarr = {
       image = "ghcr.io/hotio/sonarr:release";
-      ports = ["8989:8989"];
-      cmd = [
-        "--net=container:podman-gluetun"
-      ];
+      ports = ["8282:8989"];
+      # cmd = [
+      #   "--net=container:podman-gluetun"
+      # ];
       environment = {
         PUID = "1000";
         PGID = "1000";
