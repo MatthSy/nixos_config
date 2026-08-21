@@ -12,6 +12,6 @@
     user = "jellyfin";
     group = "media";
 
-    dataDir = "/home/jellyfin/data";
+    dataDir = "/home/jellyfin/media";
   };
 }

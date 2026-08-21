@@ -2,22 +2,24 @@
   virtualisation.oci-containers.containers = {
     qbittorrent = {
       image = "ghcr.io/hotio/qbittorrent";
-      ports = ["8080:8080"];
-      cmd = [
-        "--net=container:podman-gluetun"
+      dependsOn = ["gluetun"];
+      # ports = ["8181:8080"];
+      extraOptions = [
+        "--net=container:gluetun"
       ];
       environment = {
-        PUID = "1000";
-        PGID = "1000";
+        PUID = "994"; # jellyfin UID
+        PGID = "991"; # media GID
         UMASK = "002";
         TZ = "Etc/UTC";
         LIBTORRENT = "v1";
-        WEB_UI_PORT = "8080:tcp";
+        WEBUI_PORTS = "8181/tcp";
         QBT_LEGAL_NOTICE = "confirm";
       };
       volumes = [
         "/home/matt_serv/.config/nixos/hosts/serv/services/media/qbittorrent/config:/config"
-        "/home/jellyfin/data/media/qbittorrent:/data"
+        "/home/jellyfin/media/qbittorrent:/app/qBittorrent"
+        "/home/jellyfin/media/qbittorrent/downloads:/app/qBittorrent/downloads"
       ];
     };
   };

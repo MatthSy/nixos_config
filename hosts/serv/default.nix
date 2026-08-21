@@ -3,12 +3,13 @@
   lib,
   ...
 }: {
-  assertions = [
-    {
-      assertion = true;
-      message = "UPDATE HARDWARE CONFIG BEFORE SWITCH";
-    }
+  networking.firewall.allowedTCPPorts = [
+    8080
+    8181
+    8282
+    9696 # Prowlarr
   ];
+
   imports = [
     ./hardware-configuration.nix
 
@@ -16,6 +17,11 @@
     services/podman.nix
     services/dashy
     services/media/gluetun.nix
+    services/media/jellyfin.nix
+    services/media/sonarr
+    services/media/qbittorrent
+    services/media/prowlarr.nix
+    services/media/flaresolverr.nix
 
     # Services to add :
     # wireguard ?
@@ -59,19 +65,28 @@
   services.openssh.enable = true;
 
   # Disable suspend when lid closed
-  services.logind.settings.Login = {
-    lidSwitch = "ignore";
-    lidSwitchExternalPower = "ignore";
-    lidSwitchDocked = "ignore";
+  services.logind = {
+    settings = {
+      Login = {
+        HandleLidSwitch = "ignore";
+        IdleAction = "ignore";
+        HandleSuspendKey = "ignore";
+        HandleHibernateKey = "ignore";
+        HandleLidSwitchExternalPower = "ignore";
+        HandleLidSwitchDocked = "ignore";
+      };
+    };
   };
 
   # Disable if using custom power tools, or configure explicitly:
   powerManagement.enable = false;
   systemd = {
-    targets.sleep.enable = false;
-    targets.suspend.enable = false;
-    targets.hibernate.enable = false;
-    targets.hybrid-sleep.enable = false;
+    targets = {
+      sleep.enable = false;
+      suspend.enable = false;
+      hibernate.enable = false;
+      hybrid-sleep.enable = false;
+    };
   };
   networking.interfaces.wlp3s0.wakeOnLan.enable = true;
 
