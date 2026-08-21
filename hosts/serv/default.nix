@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  config,
   ...
 }: {
   networking.firewall.allowedTCPPorts = [
@@ -38,8 +39,9 @@
     isNormalUser = true;
     description = "Main wheel user";
     extraGroups = ["networkmanager" "wheel" "media"];
-    # packages = with pkgs; [
-    # ];
+    packages = with pkgs; [
+      btop-cuda
+    ];
   };
 
   # Bootloader.
@@ -89,6 +91,30 @@
     };
   };
   networking.interfaces.wlp3s0.wakeOnLan.enable = true;
+
+  hardware.nvidia = {
+    # Imposer la version 470xx requise pour Kepler (K2100M)
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
+
+    # Modesetting est requis
+    modesetting.enable = true;
+
+    # Pas de gestion d'énergie avancée sur cette génération
+    powerManagement.enable = false;
+    open = false; # La version 'open' ne supporte pas Kepler
+
+    # Configuration NVIDIA Prime (Offload Mode)
+    prime = {
+      offload = {
+        enable = true;
+        enableOffloadCmd = true; # Fournit la commande `nvidia-offload`
+      };
+
+      # Bus ID à vérifier impérativement (voir étape ci-dessous)
+      intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:1:0:0";
+    };
+  };
 
   # System related :
   environment.variables = {
