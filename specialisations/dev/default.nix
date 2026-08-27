@@ -11,17 +11,17 @@
 
     virtualisation.podman = {
       enable = true;
-      enableOnBoot = true;
-      storageDriver = "overlay2";
+      # enableOnBoot = true;
+      # storageDriver = "overlay2";
 
-      daemon.settings = {
-        userland-proxy = false;
-      };
+      # daemon.settings = {
+      #   userland-proxy = false;
+      # };
 
-      rootless = {
-        enable = true;
-        setSocketVariable = true;
-      };
+      # rootless = {
+      #   enable = true;
+      #   setSocketVariable = true;
+      # };
     };
 
     # virtualisation.oci-containers.backend = "docker";
