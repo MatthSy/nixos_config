@@ -3,9 +3,10 @@
     gluetun = {
       image = "docker.io/qmcgaw/gluetun:latest";
       ports = [
-        "8181:8181"
-        "8282:8989"
-        "9696:9696"
+        "8181:8181" # qBittorrent
+        "8282:8989" # Sonarr
+        "8383:7878" # Radarr
+        "9696:9696" # Prowlarr
       ];
       # cmd = [""];
       # Add required kernel capabilities and tun device

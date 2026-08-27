@@ -7,8 +7,9 @@
   networking.firewall.allowedTCPPorts = [
     8080
     8181
-    8282
+    8282 # Sonarr
     9696 # Prowlarr
+    8383 # Radarr
   ];
 
   imports = [
@@ -20,6 +21,7 @@
     services/media/gluetun.nix
     services/media/jellyfin.nix
     services/media/sonarr
+    services/media/radarr
     services/media/qbittorrent
     services/media/prowlarr.nix
     services/media/flaresolverr.nix

@@ -1,11 +1,10 @@
 {...}: {
   virtualisation.oci-containers.containers = {
-    prowlarr = {
-      image = "ghcr.io/hotio/prowlarr";
+    radarr = {
+      image = "ghcr.io/hotio/radarr:release";
       dependsOn = ["gluetun"];
-
       extraOptions = [
-        "--network=container:gluetun"
+        "--net=container:gluetun"
       ];
       environment = {
         PUID = "994"; # jellyfin UID
@@ -14,7 +13,9 @@
         TZ = "Etc/UTC";
       };
       volumes = [
-        "/home/jellyfin/media/prowlarr:/config"
+        "/home/matt_serv/.config/nixos/hosts/serv/services/media/radarr/config:/config"
+        "/home/jellyfin/media/films:/data"
+        "/home/jellyfin/media/qbittorrent/downloads:/app/qBittorrent/downloads"
       ];
     };
   };
