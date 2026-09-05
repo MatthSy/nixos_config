@@ -1,4 +1,8 @@
-{lib, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   hardware.graphics.enable = lib.mkDefault true;
 
   programs.hyprland.enable = true;
@@ -16,4 +20,8 @@
   };
 
   services.upower.enable = true;
+
+  fonts.packages = with pkgs; [
+    liberation_ttf
+  ];
 }

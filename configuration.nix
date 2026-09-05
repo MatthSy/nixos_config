@@ -6,7 +6,7 @@
   ...
 }: {
   imports = [
-    ./extra_cache_providers.nix
+    # ./extra_cache_providers.nix
   ];
 
   # Bootloader.

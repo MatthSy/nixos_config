@@ -17,6 +17,7 @@
         modules =
           [
             ./configuration.nix
+            ./extra_cache_providers.nix
             ./hosts/${hostname}
           ]
           ++ extraModules;
