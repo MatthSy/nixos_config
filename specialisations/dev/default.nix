@@ -7,6 +7,8 @@
       gcc
 
       lazydocker
+      # nodejs
+      devenv
     ];
 
     virtualisation.podman = {
