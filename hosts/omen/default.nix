@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
 
@@ -9,11 +13,15 @@
     ../../specialisations/dev
   ];
 
+  environment.systemPackages = with pkgs; [
+    cisco-packet-tracer_9
+  ];
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users."matt" = {
     isNormalUser = true;
     description = "Matt";
-    extraGroups = ["networkmanager" "wheel"];
+    extraGroups = ["networkmanager" "wheel" "libvirtd"];
     # packages = with pkgs; [
     # ];
   };
@@ -33,6 +41,31 @@
   services.xserver.videoDrivers = ["amdgpu" "nvidia"];
 
   networking.hostName = "omen"; # Define your hostname.
+
+  # cisco-packet-tracer_9
+  programs.firejail = {
+    enable = true;
+    wrappedBinaries = {
+      packettracer9 = {
+        executable = lib.getExe pkgs.cisco-packet-tracer_9;
+
+        # Will still want a .desktop entry as the package is not directly added
+        # desktop = "${pkgs.cisco-packet-tracer_9}/share/applications/cisco-packet-tracer_9.desktop";
+
+        extraArgs = [
+          # This should make it run in isolated netns, preventing internet access
+          "--net=none"
+
+          # firejail is only needed for network isolation so no futher profile is needed
+          "--noprofile"
+
+          # Packet tracer doesn't play nice with dark QT themes so this
+          # should unset the theme. Uncomment if you have this issue.
+          ''--env=QT_STYLE_OVERRIDE=""''
+        ];
+      };
+    };
+  };
 
   #Gaming
   nixpkgs.overlays = [

@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: {
   specialisation.dev.configuration = {
     imports = [
     ];
@@ -10,6 +14,21 @@
       # nodejs
       devenv
     ];
+
+    virtualisation.virtualbox.host = {
+      enable = true;
+      # enableKvm = true;
+    };
+    # virtualisation.vmware.host = {
+    #   enable = true;
+    #   # enableKvm = true;
+    # };
+    virtualisation.libvirtd = {
+      enable = true;
+      qemu.swtpm.enable = true;
+    };
+    programs.virt-manager.enable = true;
+    users.extraGroups.vboxusers.members = ["matt"];
 
     virtualisation.podman = {
       enable = true;
