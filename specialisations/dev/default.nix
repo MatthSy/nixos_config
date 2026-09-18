@@ -46,5 +46,10 @@
     };
 
     # virtualisation.oci-containers.backend = "docker";
+
+    services.mysql = {
+      enable = true;
+      package = pkgs.mariadb;
+    };
   };
 }
