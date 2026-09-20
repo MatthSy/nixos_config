@@ -6,7 +6,7 @@
     ../common/gaming.nix
 
     # Specialisations :
-    ../../specialisations/dev
+    # ../../specialisations/dev
   ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.

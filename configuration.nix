@@ -125,6 +125,8 @@
   # Disable finger print auth, prevent from black screen on session opening
   security.pam.services.login.fprintAuth = false;
 
+  security.polkit.enable = true;
+
   services.auto-cpufreq = {
     enable = lib.mkDefault true;
     settings = lib.mkDefault {
