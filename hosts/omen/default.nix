@@ -5,6 +5,7 @@
 }: {
   imports = [
     ./hardware-configuration.nix
+    ./wireguard.nix
 
     ../common/graphical.nix
     ../common/gaming.nix
@@ -12,6 +13,8 @@
     # Specialisations :
     ../../specialisations/dev
   ];
+
+  age.identityPaths = ["/etc/ssh/ssh_host_ed25519_key"];
 
   environment.systemPackages = with pkgs; [
     cisco-packet-tracer_9

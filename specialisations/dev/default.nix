@@ -13,6 +13,7 @@
       lazydocker
       # nodejs
       devenv
+      claude-code
     ];
 
     virtualisation.virtualbox.host = {
